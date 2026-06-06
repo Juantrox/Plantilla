@@ -1,0 +1,184 @@
+package GUI;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
+import javax.imageio.ImageIO;
+
+public class Frame extends JFrame {
+
+    private int mouseX, mouseY;
+    private boolean maximized = false;
+    private Rectangle normalBounds;
+
+    public Frame() {
+
+        // Elimina decoraciones del sistema
+        setUndecorated(true);
+
+        // Icono de la aplicación (colocar Logo.png en el classpath / resources)
+        try {
+            java.awt.Image icon = ImageIO.read(getClass().getResourceAsStream("/Logo.png"));
+            if (icon != null) {
+                setIconImage(icon);
+                if (java.awt.Taskbar.isTaskbarSupported()) {
+                    try {
+                        java.awt.Taskbar.getTaskbar().setIconImage(icon);
+                    } catch (UnsupportedOperationException ignore) {
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        setSize(1000, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(35, 35, 35));
+
+        // ===== BARRA DE TÍTULO =====
+        JPanel titleBar = new JPanel(new BorderLayout());
+        titleBar.setPreferredSize(new Dimension(0, 40));
+        titleBar.setBackground(new Color(25, 25, 25));
+
+        JLabel title = new JLabel("  Mi Aplicación");
+        title.setForeground(Color.WHITE);
+        title.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        // Panel de botones
+        JPanel buttonPanel = new JPanel(new FlowLayout(
+                FlowLayout.RIGHT, 0, 0));
+        buttonPanel.setOpaque(false);
+
+        JButton btnMin = createButton("—");
+        JButton btnMax = createButton("O");
+        JButton btnClose = createButton("X");
+
+        // Acción minimizar
+        btnMin.addActionListener(e ->
+                setState(JFrame.ICONIFIED));
+
+        // Acción maximizar/restaurar
+        btnMax.addActionListener(e -> {
+
+            if (!maximized) {
+                normalBounds = getBounds();
+
+                GraphicsEnvironment ge =
+                        GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+                Rectangle bounds =
+                        ge.getMaximumWindowBounds();
+
+                setBounds(bounds);
+
+                maximized = true;
+            } else {
+                setBounds(normalBounds);
+                maximized = false;
+            }
+        });
+
+        // Acción cerrar
+        btnClose.addActionListener(e ->
+                System.exit(0));
+
+        buttonPanel.add(btnMin);
+        buttonPanel.add(btnMax);
+        buttonPanel.add(btnClose);
+
+        titleBar.add(title, BorderLayout.WEST);
+        titleBar.add(buttonPanel, BorderLayout.EAST);
+
+        // ===== ARRASTRAR VENTANA =====
+        titleBar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            }
+        });
+
+        titleBar.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+                if (!maximized) {
+                    int x = e.getXOnScreen();
+                    int y = e.getYOnScreen();
+
+                    setLocation(
+                            x - mouseX,
+                            y - mouseY
+                    );
+                }
+            }
+        });
+
+        // ===== CONTENIDO =====
+        JPanel content = new JPanel();
+        content.setBackground(new Color(45, 45, 45));
+
+        JLabel label = new JLabel("Contenido de la aplicación");
+        label.setForeground(Color.WHITE);
+        content.add(label);
+
+        mainPanel.add(titleBar, BorderLayout.NORTH);
+        mainPanel.add(content, BorderLayout.CENTER);
+
+        add(mainPanel);
+
+        // Actualiza bordes redondeados al redimensionar
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+
+                setShape(new RoundRectangle2D.Double(
+                        0, 0,
+                        getWidth(),
+                        getHeight(),
+                        20, 20));
+            }
+        });
+    }
+
+    private JButton createButton(String text) {
+
+        JButton button = new JButton(text);
+
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        button.setPreferredSize(new Dimension(50, 40));
+
+        button.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setOpaque(true);
+                button.setBackground(new Color(60, 60, 60));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setOpaque(false);
+                button.repaint();
+            }
+        });
+
+        return button;
+    }
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(() -> {
+            new Frame().setVisible(true);
+        });
+    }
+}
