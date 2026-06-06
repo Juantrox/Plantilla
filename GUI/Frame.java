@@ -1,7 +1,11 @@
 package GUI;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.RoundRectangle2D;
 import javax.imageio.ImageIO;
 
@@ -36,12 +40,12 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(35, 35, 35));
+        mainPanel.setBackground(new Color(30, 30, 30));
 
         // ===== BARRA DE TÍTULO =====
         JPanel titleBar = new JPanel(new BorderLayout());
         titleBar.setPreferredSize(new Dimension(0, 40));
-        titleBar.setBackground(new Color(25, 25, 25));
+        titleBar.setBackground(new Color(45, 45, 45));
 
         JLabel title = new JLabel("  Mi Aplicación");
         title.setForeground(Color.WHITE);
@@ -91,7 +95,7 @@ public class Frame extends JFrame {
 
         titleBar.add(title, BorderLayout.WEST);
         titleBar.add(buttonPanel, BorderLayout.EAST);
-
+ 
         // ===== ARRASTRAR VENTANA =====
         titleBar.addMouseListener(new MouseAdapter() {
             @Override
@@ -117,15 +121,22 @@ public class Frame extends JFrame {
             }
         });
 
-        // ===== CONTENIDO =====
-        JPanel content = new JPanel();
-        content.setBackground(new Color(45, 45, 45));
+        // ===== CONTENIDO CENTRAL =====
+        JPanel content = new JPanel(new BorderLayout());
+        content.setBackground(new Color(30, 30, 30));
 
         JLabel label = new JLabel("Contenido de la aplicación");
         label.setForeground(Color.WHITE);
-        content.add(label);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        content.add(label, BorderLayout.CENTER);
+
+        // ===== MENU LATERAL =====
+        Menu menu = new Menu(content);
+        menu.setBackground(new Color(30, 30, 30));
+        //menu.setPreferredSize(new Dimension(150, 0));
 
         mainPanel.add(titleBar, BorderLayout.NORTH);
+        mainPanel.add(menu, BorderLayout.WEST);
         mainPanel.add(content, BorderLayout.CENTER);
 
         add(mainPanel);
@@ -139,7 +150,7 @@ public class Frame extends JFrame {
                         0, 0,
                         getWidth(),
                         getHeight(),
-                        20, 20));
+                        15, 15));
             }
         });
     }
@@ -175,10 +186,4 @@ public class Frame extends JFrame {
         return button;
     }
 
-    public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(() -> {
-            new Frame().setVisible(true);
-        });
-    }
 }
