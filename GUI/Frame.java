@@ -7,33 +7,25 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.RoundRectangle2D;
-import javax.imageio.ImageIO;
 
+/**
+ * Ventana principal de la aplicación con barra de título, menú lateral y contenido central.
+ */
 public class Frame extends JFrame {
 
     private int mouseX, mouseY;
     private boolean maximized = false;
     private Rectangle normalBounds;
 
+    /**
+     * Construye la ventana principal, configura su apariencia y agrega los componentes visuales.
+     */
     public Frame() {
 
         // Elimina decoraciones del sistema
         setUndecorated(true);
 
-        // Icono de la aplicación (colocar Logo.png en el classpath / resources)
-        try {
-            java.awt.Image icon = ImageIO.read(getClass().getResourceAsStream("/Logo.png"));
-            if (icon != null) {
-                setIconImage(icon);
-                if (java.awt.Taskbar.isTaskbarSupported()) {
-                    try {
-                        java.awt.Taskbar.getTaskbar().setIconImage(icon);
-                    } catch (UnsupportedOperationException ignore) {
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-        }
+        Icono.applyToWindow(this);
 
         setSize(1000, 600);
         setLocationRelativeTo(null);
@@ -51,7 +43,7 @@ public class Frame extends JFrame {
         title.setForeground(Color.WHITE);
         title.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-        // Panel de botones
+        // Panel de botones del menú de título
         JPanel buttonPanel = new JPanel(new FlowLayout(
                 FlowLayout.RIGHT, 0, 0));
         buttonPanel.setOpaque(false);
@@ -155,7 +147,12 @@ public class Frame extends JFrame {
         });
     }
 
-    private JButton createButton(String text) {
+    /**
+     * Crea y devuelve un botón estilizado para la barra de título.
+     * @param text Texto que se mostrará dentro del botón.
+     * @return Botón configurado con el estilo visual de la interfaz.
+     */
+    /*private JButton createButton(String text) {
 
         JButton button = new JButton(text);
 
@@ -184,6 +181,6 @@ public class Frame extends JFrame {
         });
 
         return button;
-    }
+    }*/
 
 }

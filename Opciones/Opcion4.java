@@ -3,11 +3,15 @@ package Opciones;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel que representa la cuarta opción del menú principal.
+ */
 public class Opcion4 extends JPanel {
-//Aquí las busquedas y la tabla solo muestran vehiculos activos
+
+    /**
+     * Crea el contenido visual de la opción 4.
+     */
     public Opcion4() {
-        
-        
         setLayout(new BorderLayout());
 
         JPanel PanelT = new JPanel(new BorderLayout());

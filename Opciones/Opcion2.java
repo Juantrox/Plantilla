@@ -3,10 +3,15 @@ package Opciones;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel que representa la segunda opción del menú principal.
+ */
 public class Opcion2 extends JPanel {
-//Aquí las busquedas y la tabla solo muestran vehiculos activos
+
+    /**
+     * Crea el contenido visual de la opción 2.
+     */
     public Opcion2() {
-        
         setLayout(new BorderLayout());
 
         JPanel PanelT = new JPanel(new BorderLayout());
