@@ -1,7 +1,10 @@
 package GUI;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -58,5 +61,78 @@ public class Icono {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    public static void IconosMenu(String[] rutasImagenes, JButton... botones) {
+        if (botones == null) {
+            return;
+        }
+
+        for (int i = 0; i < botones.length; i++) {
+            JButton boton = botones[i];
+            if (boton == null) {
+                continue;
+            }
+
+            String rutaImagen = (rutasImagenes != null && i < rutasImagenes.length) ? rutasImagenes[i] : null;
+            ImageIcon icono = cargarIcono(rutaImagen);
+
+            boton.setText("");
+            boton.setIcon(icono);
+            boton.setHorizontalAlignment(SwingConstants.CENTER);
+            boton.setVerticalAlignment(SwingConstants.CENTER);
+            boton.setHorizontalTextPosition(SwingConstants.CENTER);
+            boton.setVerticalTextPosition(SwingConstants.CENTER);
+            boton.setIconTextGap(0);
+            boton.setPreferredSize(new Dimension(32, 32));
+            boton.setMinimumSize(new Dimension(32, 32));
+            boton.setMaximumSize(new Dimension(32, 32));
+            boton.setMargin(new Insets(4, 4, 4, 4));
+            boton.setToolTipText("Opción " + (i + 1));
+        }
+    }
+
+    private static ImageIcon cargarIcono(String... resourcePaths) {
+        if (resourcePaths == null) {
+            return null;
+        }
+
+        for (String resourcePath : resourcePaths) {
+            if (resourcePath == null || resourcePath.trim().isEmpty()) {
+                continue;
+            }
+
+            try {
+                BufferedImage image = null;
+
+                String normalizedPath = resourcePath.replace('\\', '/');
+
+                try (InputStream stream = Icono.class.getResourceAsStream(normalizedPath)) {
+                    if (stream != null) {
+                        image = ImageIO.read(stream);
+                    }
+                }
+
+                if (image == null) {
+                    File file = new File(normalizedPath);
+                    if (!file.isAbsolute()) {
+                        file = new File(System.getProperty("user.dir"), normalizedPath);
+                    }
+                    if (file.exists()) {
+                        image = ImageIO.read(file);
+                    }
+                }
+
+                if (image == null) {
+                    continue;
+                }
+
+                Image scaled = image.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaled);
+            } catch (Exception ignored) {
+            }
+        }
+
+        return null;
     }
 }

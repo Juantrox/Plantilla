@@ -1,22 +1,26 @@
 package GUI;
-
-import Opciones.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Panel lateral que contiene las opciones del menú principal y cambia el contenido mostrado.
  */
 public class Menu extends javax.swing.JPanel implements ActionListener {
 
-    private JButton option1Button;
-    private JButton option2Button;
-    private JButton option3Button;
-    private JButton option4Button;
-    private JButton option5Button;
-
     private JPanel mainPanel;
+    private final List<JButton> botonesMenu = new ArrayList<>();
+
+    private static final String[][] OPCIONES_MENU = {
+            {"opcion1", "Iconos/I1.png"},
+            {"opcion2", "Iconos/I2.png"},
+            {"opcion3", "Iconos/I3.png"},
+            {"opcion4", "Iconos/I4.png"},
+            {"opcion5", "Iconos/I5.png"},
+            {"Guardar", "Iconos/I6.png"}
+    };
 
     /**
      * Crea el menú y lo enlaza con el panel principal donde se mostrarán las opciones seleccionadas.
@@ -29,38 +33,25 @@ public class Menu extends javax.swing.JPanel implements ActionListener {
         this.setLayout(new BorderLayout());
 
         // Panel para las opciones del menú en la parte izquierda
-        JPanel panel = new JPanel(new GridLayout(5, 1));
+        JPanel panel = new JPanel(new GridLayout(OPCIONES_MENU.length, 1));
         panel.setBackground(new Color(45, 45, 45));
 
-        // Opción 1
-        option1Button = new JButton("Ingresar");
-        option1Button.addActionListener(this);
-        PintarBoton(option1Button);
-        panel.add(option1Button);
+        List<String> rutasImagenes = new ArrayList<>();
+        for (String[] opcion : OPCIONES_MENU) {
+            JButton boton = new JButton("");
+            boton.setActionCommand(opcion[0]);
+            boton.addActionListener(this);
+            if ("Guardar".equals(opcion[0])) {
+                boton.setBackground(Color.GREEN.darker());
+            } else {
+                PintarBoton(boton);
+            }
+            panel.add(boton);
+            botonesMenu.add(boton);
+            rutasImagenes.add(opcion[1]);
+        }
 
-        // Opción 2
-        option2Button = new JButton("Retirar");
-        option2Button.addActionListener(this);
-        PintarBoton(option2Button);
-        panel.add(option2Button);
-
-        // Opción 3
-        option3Button = new JButton("Listar");
-        option3Button.addActionListener(this);
-        PintarBoton(option3Button);
-        panel.add(option3Button);
-
-        // Opción 4
-        option4Button = new JButton("Historial");
-        option4Button.addActionListener(this);
-        PintarBoton(option4Button);
-        panel.add(option4Button);
-
-        // Opción 5
-        option5Button = new JButton("Salir");
-        option5Button.setBackground(Color.RED);
-        option5Button.addActionListener(this);
-        panel.add(option5Button, BorderLayout.SOUTH);
+        Icono.IconosMenu(rutasImagenes.toArray(new String[0]), botonesMenu.toArray(new JButton[0]));
 
         // Agregar el panel del menú al panel principal en la parte izquierda
         this.add(panel);
@@ -72,20 +63,29 @@ public class Menu extends javax.swing.JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == option1Button) {
-            Opciones.Opcion1 O1 = new Opciones.Opcion1();
-            MPAdd(O1);
-        } else if (e.getSource() == option2Button) {
-            Opciones.Opcion2 O2 = new Opciones.Opcion2();
-            MPAdd(O2);
-        } else if (e.getSource() == option3Button) {
-            Opciones.Opcion3 O3 = new Opciones.Opcion3();
-            MPAdd(O3);
-        } else if (e.getSource() == option4Button) {
-            Opciones.Opcion4 O4 = new Opciones.Opcion4();
-            MPAdd(O4);
-        } else if (e.getSource() == option5Button) {
-            System.exit(0);
+        String comando = e.getActionCommand();
+
+        switch (comando) {
+            case "opcion1":
+                MPAdd(new Opciones.Opcion1());
+                break;
+            case "opcion2":
+                MPAdd(new Opciones.Opcion2());
+                break;
+            case "opcion3":
+                MPAdd(new Opciones.Opcion3());
+                break;
+            case "opcion4":
+                MPAdd(new Opciones.Opcion4());
+                break;
+            case "opcion5":
+                MPAdd(new Opciones.Opcion5());
+                break;
+            case "Guardar":
+                System.exit(0);
+                break;
+            default:
+                break;
         }
     }
 

@@ -152,7 +152,7 @@ public class Frame extends JFrame {
      * @param text Texto que se mostrará dentro del botón.
      * @return Botón configurado con el estilo visual de la interfaz.
      */
-    /*private JButton createButton(String text) {
+    private JButton createButton(String text) {
 
         JButton button = new JButton(text);
 
@@ -181,6 +181,6 @@ public class Frame extends JFrame {
         });
 
         return button;
-    }*/
+    }
 
 }
